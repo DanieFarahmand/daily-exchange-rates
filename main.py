@@ -2,7 +2,7 @@ import json
 
 import requests
 
-from config import BASE_PATH, API_KEY
+from config import BASE_PATH, API_KEY, rules
 
 
 def get_rates():
@@ -12,5 +12,13 @@ def get_rates():
     return None
 
 
+def archive(timestamp, rates):
+    with open(f"archive/{timestamp}.json", "w") as f:
+        f.write(json.dumps(rates))
+
+
 if __name__ == "__main__":
-    print(get_rates())
+    res = get_rates()
+
+    if rules["archive"]:
+        archive(res["timestamp"], res["rates"])
