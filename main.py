@@ -1,9 +1,11 @@
 import json
+from datetime import datetime
 
 import requests
 
 from config import BASE_PATH, API_KEY, rules
 from mail import send_smtp_email
+from notification import send_sms
 
 
 def get_rates():
@@ -28,7 +30,7 @@ def send_mail(timestamp, rates):
     send_smtp_email(text, timestamp)
 
 
-def send_notification(rates):
+def check_notification(rates):
     preferred = rules["notification"]["preferred"]
     msg = ""
     for exc in preferred.keys():
@@ -38,7 +40,12 @@ def send_notification(rates):
 
         if rates[exc] <= preferred[exc]["min"]:
             msg += f"{exc} reached min: {rates[exc]} \n"
-    print(msg)
+    return msg
+
+
+def send_notification(msg):
+    msg += datetime.now()
+    send_sms(msg)
 
 
 if __name__ == "__main__":
@@ -51,4 +58,7 @@ if __name__ == "__main__":
         send_mail(res["timestamp"], res["rates"])
 
     if rules["notification"]["enable"]:
-        send_notification(res["rates"])
+        notification_msg = check_notification(res["rates"])
+
+        if notification_msg:
+            send_notification(notification_msg)
