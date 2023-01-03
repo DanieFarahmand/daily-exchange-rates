@@ -1,10 +1,3 @@
-from api_key import API_KEY
-
-BASE_PATH = "https://api.apilayer.com/fixer/latest?"
-API_KEY = API_KEY
-
-url = BASE_PATH + API_KEY
-
 rules = {
     "archive": True,
     "email": {

@@ -1,39 +1,17 @@
 import json
 from datetime import datetime
 
-import requests
 from khayyam import JalaliDatetime
 
-from config import url, rules
-from mail import send_smtp_email
+from config import rules
+from fixer import get_rates
+from mail import send_mail
 from notification import send_sms
-
-
-def get_rates():
-    response = requests.get(url)
-    if response.status_code == 200:
-        return json.loads(response.text)
-    return None
 
 
 def archive(file_name, rates):
     with open(f"archive/{file_name}.json", "w") as f:
         f.write(json.dumps(rates))
-
-
-def send_mail(timestamp, rates):
-    datetime_now = JalaliDatetime(datetime.now()).strftime(" %A %Y-%m-%d %H:%M")
-    subject = f"{timestamp} {datetime_now} rates"
-
-    if rules["email"]["preferred"] is not None:
-        tmp = dict()
-        for exc in rules["email"]["preferred"]:
-            tmp[exc] = rates[exc]
-        rates = tmp
-
-    text = f"{rates}"
-
-    send_smtp_email(subject, text)
 
 
 def check_notify_rules(rates):
