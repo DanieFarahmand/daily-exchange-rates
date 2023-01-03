@@ -1,8 +1,9 @@
-# from config import rules
-#
 def send_sms(text):
     pass
 #
+# from config import rules
+
+
 # def send_sms(text):
 #     try:
 #         api = KavenegarAPI('417A68324B3535486435565A70686D6D6F676D34562F2F79617958584A54597A7537586D656A496E684F673D')
@@ -18,4 +19,3 @@ def send_sms(text):
 #         print(e)
 #     except HTTPException as e:
 #         print(e)
-
